@@ -19,7 +19,7 @@ def main():
             
             print("Ingrese el nombre del jugador 2:")
             player2 = input()
-            registre_jugadors(player1, player2, "archivo_login")
+            registre_jugadors(player1, player2, score="score", archivo_login="archivo_login")
         elif opcion == "2":
             print("Ingrese su nombre:")
             player1 = input()

@@ -1,40 +1,62 @@
-# -*- coding: utf-8 -*-
+def mostrar_marcador(player1, player1_stats, player2, player2_stats):
+    print("\nMarcador:\n")
+    print(f"{player1}: {player1_stats['ganadas']} ganadas, {player1_stats['perdidas']} perdidas")
+    print(f"{player2}: {player2_stats['ganadas']} ganadas, {player2_stats['perdidas']} perdidas")
 
-import random
-import getpass
+def ganador(opcion, empate):
+    if opcion == empate:
+        return "Empate"
+    elif (opcion == "piedra" and empate == "tijeras") or (opcion == "papel" and empate == "piedra") or (opcion == "tijeras" and empate == "papel"):
+        return "Jugador 1"
+    else:
+        return "Jugador 2"
 
-def registre_jugadors(player1, player2, score, archivo_login):
-    try:
-        with open(archivo_login, 'w') as f:
-            f.write(f'{player1}, {score}\n')
-            f.write(f'{player2}, {score}\n')
-            game_1vs1(player1, player2)
-    except FileNotFoundError:
-        print("Archivo no encontrado")
+def opciones(player1, player2):
+    opciones = ["piedra", "papel", "tijeras"]
+    player1_opcion = input(f"{player1}, elige entre piedra, papel o tijeras: ").lower()
+    player2_opcion = input(f"{player2}, elige entre piedra, papel o tijeras: ").lower()
+    if player1_opcion not in opciones or player2_opcion not in opciones:
+        print("Opción inválida, por favor elige entre piedra, papel o tijeras.")
+        return opciones(player1, player2)
+    return player1_opcion, player2_opcion
 
-def game_1vs1(player1, playeer2):
-    def score():
-        return {player1: 0, playeer2: 0}
-    score = score()
+def game_1vs1(players, player1, player2):
+    print(f"\n¡Comienza el juego entre {player1} y {player2}!\n")
+    while True:
+        player1_opcion, player2_opcion = opciones(player1, player2)
+        print(f"\n{player1} eligió {player1_opcion}.")
+        print(f"{player2} eligió {player2_opcion}.\n")
+        resultado = ganador(player1_opcion, player2_opcion)
+        print(f"Resultado: {resultado}\n")
+        if resultado == "Jugador 1":
+            players[player1]['ganadas'] += 1
+            players[player2]['perdidas'] += 1
+        elif resultado == "Jugador 2":
+            players[player2]['ganadas'] += 1
+            players[player1]['perdidas'] += 1
+        else:
+            print("Empate.")
+        mostrar_marcador(player1, players[player1], player2, players[player2])
+        continuar = input("\n¿Quieres jugar otra ronda? (s/n): ")
+        if continuar.lower() != 's':
+            break
+    return players
 
-    def marcador(player1, player2, score):
-        print("\nMarcador:\n")
-        print(f"{player1}: {score[player1]}")
-        print(f"{player2}: {score[player2]}")
-
-    while-True:
-        break
-
-def game_vsCPU(player1, cpu):
-    def score():
-        return {player1: 0, cpu: 0}
-    score = score()
-
-    def marcador_cpu(player1, cpu):
-        print("\nMarcador:\n")
-        print(f"{player1}: {score[player1]}")
-        print(f"{cpu}: {score[cpu]}")
-
-    while-True:
-        break
-
+def game_vsCPU(players, player1):
+    print(f"\n¡Comienza el juego contra la CPU, {player1}!\n")
+    while True:
+        player1_opcion = input(f"{player1}, elige entre piedra, papel o tijeras: ").lower()
+        cpu_opcion = random.choice(["piedra", "papel", "tijeras"])
+        print(f"La CPU eligió {cpu_opcion}.\n")
+        resultado = ganador(player1_opcion, cpu_opcion)
+        print(f"Resultado: {resultado}\n")
+        if resultado == "Jugador 1":
+            players[player1]['ganadas'] += 1
+        elif resultado == "Jugador 2":
+            players[player1]['perdidas'] += 1
+        else:
+            print("Empate.")
+        print(f"Marcador: {players[player1]['ganadas']} ganadas, {players[player1]['perdidas']} perdidas\n")
+        continuar = input("¿Quieres jugar otra ronda? (s/n): ")
+        if continuar.lower() != 's':
+            break
